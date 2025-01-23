@@ -20,22 +20,40 @@ router
     res.status(201).json(newUser);
     })
 
-    router 
-    .delete("/:id", (req, res) => {
+    router
+    .get("/:id", (req, res) => {
+        const id = req.params.id;
+        const user = users.find(user => user.id === parseInt(id));
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            next();
+        } 
+    }) 
+    .delete("/:id", (req, res, next) => {
         const id = req.params.id;
         const index = users.findIndex(user => user.id === parseInt(id));
-        users.splice(index, 1);
-        res.status(204).send("json");
+        if (index || index === 0) {
+            users.splice(index, 1);
+            res.json({status: 204, message: "User deleted"});
+        } else {
+            next();
+        } 
         })
 
     .patch 
     ("/:id", (req, res) => {
         const id = req.params.id;
         const index = users.findIndex(user => user.id === parseInt(id));
+        if (index || index === 0) {
         users[index].username = req.body.username;
         users[index].email = req.body.email;
         users[index].firstName = req.body.firstName;
         res.status(200).json(users[index]);
+        } else {
+            next();
+        } 
+
     })
 
     

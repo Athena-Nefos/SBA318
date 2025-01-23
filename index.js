@@ -17,6 +17,7 @@ app.use((req, res, next) => {
     next();
 });
 
+
 //routes
 app.use("/api/users", users);
 app.use("/api/posts", posts);
@@ -25,9 +26,12 @@ app.use("/api/comments", comments);
 //Error Handling Middleware
 
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send("Something broke!");
-});
+    const error = new Error("Not found");
+    error.status = 404;
+    res.json({status: error.status, message: error.message});
+}); 
+
+
 
 
 
